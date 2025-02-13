@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passcode Valentine</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffebee;
+            color: #d32f2f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            max-width: 800px;
+            width: 100%;
+        }
+        .foto {
+            flex: 1;
+            background-image: url('assets/images/Cat Love GIF by MESA My Emotion Support Animal.gif');
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease-in-out; /* Animasi perubahan gambar */
+        }
+        .form {
+            flex: 1;
+            padding: 40px;
+            text-align: center;
+        }
+        .form h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #d32f2f;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+            pointer-events: none; /* Agar input tidak bisa diketik manual */
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .keypad button {
+            background-color: #d32f2f;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .keypad button:hover {
+            background-color: #b71c1c;
+        }
+        .submit-btn {
+            background-color: #d32f2f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background-color: #b71c1c;
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
+        }
+            /* Ornamen Hati */
+        .ornamen {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.6;
+            animation: float 6s infinite ease-in-out;
+        }
+        .ornamen.hati {
+            width: 50px;
+            height: 50px;
+            background-image: url('heart-red-svgrepo-com.svg');
+            background-size: cover;
+        }
+        .ornamen.bintang {
+            width: 40px;
+            height: 40px;
+            background-image: url('star-svgrepo-com.svg');
+            background-size: cover;
+        }
+        /* Animasi */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ornamen Hati dan Bintang -->
+    <div class="ornamen hati" style="top: 10%; left: 5%;"></div>
+    <div class="ornamen hati" style="top: 20%; right: 10%;"></div>
+    <div class="ornamen bintang" style="top: 50%; left: 15%;"></div>
+    <div class="ornamen bintang" style="top: 70%; right: 20%;"></div>
+    <div class="ornamen hati" style="top: 90%; left: 25%;"></div>
+    </style>
+<body>
+    <div class="container">
+        <!-- Bagian Foto -->
+        <div class="foto" id="foto"></div>
+
+        <!-- Bagian Form Passcode -->
+        <div class="form">
+            <h1>Masukkan Passcode</h1>
+            <input type="password" id="passcode" placeholder="Masukkan PIN" maxlength="6" readonly>
+            <div class="keypad">
+                <button onclick="addNumber('1')">1</button>
+                <button onclick="addNumber('2')">2</button>
+                <button onclick="addNumber('3')">3</button>
+                <button onclick="addNumber('4')">4</button>
+                <button onclick="addNumber('5')">5</button>
+                <button onclick="addNumber('6')">6</button>
+                <button onclick="addNumber('7')">7</button>
+                <button onclick="addNumber('8')">8</button>
+                <button onclick="addNumber('9')">9</button>
+                <button onclick="clearInput()">C</button>
+                <button onclick="addNumber('0')">0</button>
+                <button onclick="cekPasscode()">✓</button>
+            </div>
+            <p class="error" id="error"></p>
+        </div>
+    </div>
+
+    <script>
+        let kesalahan = 0; // Menghitung jumlah kesalahan
+        const pesanKesalahan = [
+            "Parah banget sih gatau.",
+            "Kamu bener-bener ga sayang lagi ya sama aku sampai lupaaa.",
+            "Kamu tuh dongoo bangeeet masa tanggal jadian kita aja lupaaaaa.",
+            "Serius nih? Kamu salahhhh lagiii, bikin yang bener ajaaa kamu bikin ak emosi sumpaaah!😤",
+            "Coba dehhh diinget-inget lagi masa kamu lupa sih passcode-nya, ak kecoaaa banget sihhh🤦‍♀️",
+            "Kamu tuh gimana sih? Masa masih salaah? Kamu nguji kesabaran ak kaaah??? 😤",
+            "Sumpah, kalau salah lagi, ak udah egkk tau lagi deh... Tapi yaudah, ak tetap sayang kok.",
+            "Nggak nyangka bisa salah terus... tapi yaudah, ak nggak bisa marah lama-lama sih, hehe 🥺"
+        ];
+
+        const gambarKesalahan = [
+            'image/6d41c400-975d-4834-b18f-2ee3e1eeac84.webp',
+            'image/a8f4ba18-5c7c-4e74-a19e-8c1095e7a751.webp',
+            'image/b33fae51-9b7c-42a7-b700-8c84c27ffab4.webp'
+        ];
+
+        // Fungsi untuk menambahkan angka ke input
+        function addNumber(number) {
+            const passcodeInput = document.getElementById('passcode');
+            if (passcodeInput.value.length < 6) {
+                passcodeInput.value += number;
+            }
+        }
+
+        // Fungsi untuk menghapus input
+        function clearInput() {
+            document.getElementById('passcode').value = '';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Fungsi untuk mengecek passcode
+        function cekPasscode() {
+            const passcode = document.getElementById('passcode').value;
+            const error = document.getElementById('error');
+            const foto = document.getElementById('foto');
+
+            // PIN yang benar (120524)
+            if (passcode === "120524") {
+                window.location.href = "Untitled-1.html"; // Redirect ke halaman utama
+            } else {
+                kesalahan++; // Tambah jumlah kesalahan
+                const indexPesan = (kesalahan - 1) % pesanKesalahan.length; // Loop pesan
+                error.textContent = pesanKesalahan[indexPesan]; // Tampilkan pesan sesuai kesalahan
+                error.style.display = "block"; // Tampilkan pesan error
+                document.getElementById('passcode').value = ''; // Kosongkan input
+
+                // Ganti gambar berdasarkan jumlah kesalahan
+                if (kesalahan <= 3) {
+                    foto.style.backgroundImage = `url('${gambarKesalahan[kesalahan - 1]}')`;
+                } else {
+                    // Kembali ke gambar awal setelah 3 kesalahan
+                    foto.style.backgroundImage = "url('assets/images/Cat Love GIF by MESA My Emotion Support Animal.gif')";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
